@@ -1,2 +1,6 @@
 [[plugins]]
 package = "@netlify/plugin-nextjs"
+
+[functions]
+  node_bundler = "esbuild"
+  included_files = ["public/locales/en/*.json", "public/locales/zh/*.json", "/var/task/next-i18next.config.js"]
