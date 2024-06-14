@@ -11,6 +11,9 @@ const { i18n } = require('./next-i18next.config');
 module.exports = withPlugins([withTM], {
   reactStrictMode: false,
   i18n,
+  experimental: {
+    appDir: false,
+  },
   async redirects() {
     return [
       {
