@@ -7,7 +7,7 @@ const withPlugins = require('next-compose-plugins');
 //   'hast-to-hyperscript',
 // ]);
 
-const { i18n } = require('./next-i18next.config');
+const { i18n } = require('./next-i18next.config.cjs');
 
 module.exports = withPlugins([], {
   transpilePackages: ['@kubed/components', '@kubed/hooks', '@kubed/hooks'],
