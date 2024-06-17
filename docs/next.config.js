@@ -1,18 +1,27 @@
 const withPlugins = require('next-compose-plugins');
-const withTM = require('next-transpile-modules')([
-  '@kubed/components',
-  '@kubed/hooks',
-  '@kubed/hooks',
-  'rehype-react',
-  'hast-to-hyperscript',
-]);
+// const withTM = require('next-transpile-modules')([
+//   '@kubed/components',
+//   '@kubed/hooks',
+//   '@kubed/hooks',
+//   'rehype-react',
+//   'hast-to-hyperscript',
+// ]);
+const path = require('path');
+
 const { i18n } = require('./next-i18next.config');
 
-module.exports = withPlugins([withTM], {
+module.exports = withPlugins([], {
+  transpilePackages: ['@kubed/components', '@kubed/hooks', '@kubed/hooks'],
   reactStrictMode: false,
   i18n,
   experimental: {
-    appDir: false,
+    forceSwcTransforms: true,
+  },
+  compiler: {
+    styledComponents: true,
+  },
+  typescript: {
+    ignoreBuildErrors: true,
   },
   async redirects() {
     return [
