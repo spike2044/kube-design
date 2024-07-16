@@ -1,17 +1,50 @@
-'use client';
-
 import * as React from 'react';
 import * as SheetPrimitive from '@radix-ui/react-dialog';
-import styled from 'styled-components';
 import { CloseDuotone } from '@kubed/icons';
+import { isNull } from 'lodash';
 
-import { StyledSheetContent, StyledSheetOverlay } from './Sheet.styles';
-import { Button } from '../index';
+import {
+  StyledSheetContent,
+  StyledSheetOverlay,
+  StyledSheetHeader,
+  StyledSheetFooter,
+  StyledSheetTitle,
+  StyledSheetDescription,
+  StyledHeaderClose,
+  HeaderWrapper,
+} from './Sheet.styles';
+import { Button, Field } from '../index';
 
 const Sheet = SheetPrimitive.Root;
 const SheetTrigger = SheetPrimitive.Trigger;
 const SheetClose = SheetPrimitive.Close;
 const SheetPortal = SheetPrimitive.Portal;
+const SheetHeaderClose = StyledHeaderClose;
+
+const SheetFieldTitle = (props: {
+  header?: React.ReactNode;
+  title?: React.ReactNode;
+  description?: React.ReactNode;
+  titleIcon?: React.ReactNode;
+  headerExtra?: React.ReactNode;
+}) => {
+  const { header, title, description, titleIcon, headerExtra } = props;
+  if (header || isNull(header)) return header;
+
+  let body;
+  if (headerExtra) {
+    body = (
+      <HeaderWrapper>
+        <Field value={title} label={description} avatar={titleIcon} />
+        {headerExtra}
+      </HeaderWrapper>
+    );
+  } else {
+    body = <Field value={title} label={description} avatar={titleIcon} />;
+  }
+
+  return <div className="kubed-modal-title">{body}</div>;
+};
 
 const SheetOverlay = React.forwardRef<
   React.ElementRef<typeof SheetPrimitive.Overlay>,
@@ -34,58 +67,26 @@ const SheetContent = React.forwardRef<
   <SheetPortal>
     <SheetOverlay />
     <StyledSheetContent ref={ref} side={side} className={className} {...props}>
-      <SheetPrimitive.Close>
-        <Button
-          variant="filled"
-          color="secondary"
-          radius="sm"
-          size="sm"
-          leftIcon={<CloseDuotone />}
-        />
-      </SheetPrimitive.Close>
+      <SheetHeaderClose asChild>
+        <Button variant="filled" color="secondary" radius="sm" size="sm">
+          <CloseDuotone size={24} variant="light" />
+        </Button>
+      </SheetHeaderClose>
       {children}
     </StyledSheetContent>
   </SheetPortal>
 ));
 SheetContent.displayName = SheetPrimitive.Content.displayName;
 
-const StyledSheetHeader = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin-top: 0.125rem;
-  text-align: center;
-
-  @media (min-width: 640px) {
-    text-align: left;
-  }
-`;
-
 const SheetHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
   <StyledSheetHeader {...props} className={className} />
 );
 SheetHeader.displayName = 'SheetHeader';
 
-const StyledSheetFooter = styled.div`
-  display: flex;
-  flex-direction: column-reverse;
-
-  @media (min-width: 640px) {
-    flex-direction: row;
-    justify-content: flex-end;
-    margin-left: 0.125rem;
-  }
-`;
-
 const SheetFooter = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
   <StyledSheetFooter {...props} className={className} />
 );
 SheetFooter.displayName = 'SheetFooter';
-
-const StyledSheetTitle = styled(SheetPrimitive.Title)`
-  font-size: 1.125rem;
-  font-weight: 600;
-  color: var(--color-foreground);
-`;
 
 const SheetTitle = React.forwardRef<
   React.ElementRef<typeof SheetPrimitive.Title>,
@@ -94,11 +95,6 @@ const SheetTitle = React.forwardRef<
   <StyledSheetTitle ref={ref} className={className} {...props} />
 ));
 SheetTitle.displayName = SheetPrimitive.Title.displayName;
-
-const StyledSheetDescription = styled(SheetPrimitive.Description)`
-  font-size: 0.875rem;
-  color: var(--color-muted-foreground);
-`;
 
 const SheetDescription = React.forwardRef<
   React.ElementRef<typeof SheetPrimitive.Description>,
@@ -119,4 +115,6 @@ export {
   SheetFooter,
   SheetTitle,
   SheetDescription,
+  SheetHeaderClose,
+  SheetFieldTitle,
 };
